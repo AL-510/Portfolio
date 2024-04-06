@@ -60,6 +60,10 @@ const ComputersCanvas = () => {
     };
   }, []);
 
+  const welcomeText = "Welcome to my page!";
+  const primaryColor = "#7F33FF"; // Violet color
+  const secondaryColor = "#FFFFFF"; // White color
+
   return (
     <>
       <Canvas
@@ -68,10 +72,16 @@ const ComputersCanvas = () => {
         camera={{ position: [20, 3, 5], fov: 50 }}
         gl={{ preserveDrawingBuffer: true }}
       >
-        <Suspense fallback={<CanvasLoader />}>
-          <OrbitControls enableZoom={false} maxPolarAngle={Math.PI / 2} minPolarAngle={Math.PI / 2} />
-          <Computers isMobile={isMobile} />
-        </Suspense>
+        {isMobile ? (
+          <div style={{ color: primaryColor, fontSize: '36px', textAlign: 'center', marginTop: '50px' }}>
+            {welcomeText}
+          </div>
+        ) : (
+          <Suspense fallback={<CanvasLoader />}>
+            <OrbitControls enableZoom={false} maxPolarAngle={Math.PI / 2} minPolarAngle={Math.PI / 2} />
+            <Computers isMobile={isMobile} />
+          </Suspense>
+        )}
         <Preload all />
       </Canvas>
     </>
