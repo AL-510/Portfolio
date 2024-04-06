@@ -28,22 +28,27 @@ const Ball = (props) => {
   )
 }
 
-const BallCanvas = ({icon}) => {
+const BallCanvas = ({ icon }) => {
   return (
     <>
-    <Canvas
-    frameLoop="demand"
-    gl={{preserveDrawingBuffer: true}}
-    >
-      <Suspense fallback={<CanvasLoader/>}>
-        <OrbitControls 
-        enableZoom={false}/>
-        <Ball imgUrl={icon}/>
-      </Suspense>
-      <Preload all/>
-    </Canvas>
+      {window.innerWidth < 768 ? ( // Check for mobile viewport
+        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+          <img src={icon} alt="Icon" /> {/* Display icon for mobile */}
+        </div>
+      ) : (
+        <Canvas
+          frameLoop="demand"
+          gl={{ preserveDrawingBuffer: true }}
+        >
+          <Suspense fallback={<CanvasLoader />}>
+            <OrbitControls enableZoom={false} />
+            <Ball imgUrl={icon} />
+          </Suspense>
+          <Preload all />
+        </Canvas>
+      )}
     </>
-  )
-}
+  );
+};
 
 export default BallCanvas
