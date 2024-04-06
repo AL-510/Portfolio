@@ -60,6 +60,7 @@ const ComputersCanvas = () => {
     };
   }, []);
 
+  // Define text and colors
   const welcomeText = "Welcome to my page!";
   const primaryColor = "#7F33FF"; // Violet color
   const secondaryColor = "#FFFFFF"; // White color
