@@ -36,8 +36,8 @@ const Computers = ({ isMobile }) => {
      shadow-mapSize={isMobile ? mobileShadowMapSize : 1024} // Reduce shadow quality on mobile
     />
     <primitive object={computer.scene}
-     scale={isMobile ? 0.6 : 1.05}
-     position={isMobile ? [-1.5, -6, -2.2] : [0, -6.25, -1.5]} 
+     scale={isMobile ? 0.68 : 1.05}
+     position={isMobile ? [-2.75, -1, -2.2] : [0, -6.25, -1.5]} 
     rotation={[-0.01, -0.2, -0.1]} />
    </mesh>
   </>
