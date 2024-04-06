@@ -55,12 +55,13 @@ const ComputersCanvas = () => {
   }, [])
   return (
     <>
-    <Canvas
-    frameLoop="demand"
-    shadows
-    camera={{position: [20, 3, 5], fov: 50}}
-    gl={{preserveDrawingBuffer: true}}
-    >
+     <Canvas
+        frameLoop="demand"
+        shadows
+        camera={{ position: [20, 3, 5], fov: isMobile ? 60 : 50 }} // Adjusted fov for mobile
+        gl={{ preserveDrawingBuffer: true }}
+        style={{ width: '100%', height: '100%' }} // Ensure the canvas fills the screen
+      >
       <Suspense fallback={<CanvasLoader/>}>
         <OrbitControls 
         enableZoom={false}
