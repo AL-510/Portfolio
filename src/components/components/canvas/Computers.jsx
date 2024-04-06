@@ -1,11 +1,11 @@
-import {Suspense, useState, useEffect} from 'react';
-import {Canvas} from '@react-three/fiber';
-import { OrbitControls, Preload, useGLTF, } from '@react-three/drei';
+import { Suspense, useState, useEffect } from 'react';
+import { Canvas } from '@react-three/fiber';
+import { OrbitControls, Preload, useGLTF } from '@react-three/drei';
 import CanvasLoader from '../Loader';
 import { useRef } from 'react';
 
-const Computers = ({isMobile}) => {
-  const computer = useGLTF('./public/desktop_pc/scene.gltf')
+const Computers = ({ isMobile }) => {
+  const computer = useGLTF('./public/desktop_pc/scene.gltf');
   const geometryRef = useRef(null);
   const materialRef = useRef(null);
   useEffect(() => {
@@ -18,25 +18,31 @@ const Computers = ({isMobile}) => {
       }
     };
   }, []);
+
+  const mobileLightIntensity = 1.0; // Adjust for desired intensity on mobile
+  const mobileShadowMapSize = 512; // Adjust shadow quality for mobile
+
   return (
     <>
-    <mesh>
-      <hemisphereLight intensity={2.55} groundColor="black"/>
-      <pointLight intensity={1}/>
-      <spotLight position={[-20, 50, 10]}
-      angle={0.12}
-      penumbra={1}
-      intensity={1}
-      castShadow
-      shadow-mapSize={1024}/>
-      <primitive object={computer.scene}
-      scale={isMobile ? 1.35 : 1.05}
-      position={isMobile ? [0, -6, -2.2] : [0, -6.25, -1.5]}/>
-      rotation={[-0.01, -0.2, -0.1]}
-    </mesh>
+      <mesh>
+        <hemisphereLight intensity={isMobile ? mobileLightIntensity : 2.55} groundColor="black" />
+        {isMobile ? null : <pointLight intensity={1} />} {/* Disable pointLight on mobile */}
+        <spotLight
+          position={[-20, 50, 10]}
+          angle={0.12}
+          penumbra={1}
+          intensity={isMobile ? mobileLightIntensity : 1} // Adjust intensity on mobile
+          castShadow={!isMobile} // Disable shadows on mobile
+          shadow-mapSize={isMobile ? mobileShadowMapSize : 1024} // Reduce shadow quality on mobile
+        />
+        <primitive object={computer.scene}
+          scale={isMobile ? 1.35 : 1.05}
+          position={isMobile ? [0, -6, -2.2] : [0, -6.25, -1.5]} />
+        <rotation={[-0.01, -0.2, -0.1]} />
+      </mesh>
     </>
-  )
-}
+  );
+};
 
 const ComputersCanvas = () => {
   const [isMobile, setIsMobile] = useState(false);
@@ -46,33 +52,30 @@ const ComputersCanvas = () => {
 
     setIsMobile(mediaQuery.matches);
     const handleMediaQueryChange = (event) => {
-      setIsMobile(event.matches)
-    }
+      setIsMobile(event.matches);
+    };
     mediaQuery.addEventListener('change', handleMediaQueryChange);
     return () => {
       mediaQuery.removeEventListener('change', handleMediaQueryChange);
-    }
-  }, [])
+    };
+  }, []);
+
   return (
     <>
-     <Canvas
+      <Canvas
         frameLoop="demand"
-        shadows
-        camera={{ position: [20, 3, 5], fov: isMobile ? 60 : 50 }} // Adjusted fov for mobile
+        shadows={!isMobile} // Disable shadows entirely on mobile
+        camera={{ position: [20, 3, 5], fov: 50 }}
         gl={{ preserveDrawingBuffer: true }}
-        style={{ width: '100%', height: '100%' }} // Ensure the canvas fills the screen
       >
-      <Suspense fallback={<CanvasLoader/>}>
-        <OrbitControls 
-        enableZoom={false}
-        maxPolarAngle={Math.PI/2}
-        minPolarAngle={Math.PI/2}/>
-        <Computers isMobile={isMobile}/>
-      </Suspense>
-      <Preload all/>
-    </Canvas>
+        <Suspense fallback={<CanvasLoader />}>
+          <OrbitControls enableZoom={false} maxPolarAngle={Math.PI / 2} minPolarAngle={Math.PI / 2} />
+          <Computers isMobile={isMobile} />
+        </Suspense>
+        <Preload all />
+      </Canvas>
     </>
-  )
-}
+  );
+};
 
-export default  ComputersCanvas
+export default ComputersCanvas;
